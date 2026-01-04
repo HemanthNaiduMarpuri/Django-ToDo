@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+      <h2 class="mb-0">Deleted Tasks</h2>
+      <a href="{% url 'home' %}" class="btn btn-light btn-sm">Back to Tasks</a>
+    </div>
+    <div class="card-body">
+      {% if tasks %}
+        <ul class="list-group list-group-flush">
+          {% for task in tasks %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>
+                <strong>{{ task.title }}</strong>
+                <small class="text-muted"> (deleted on {{ task.trashed_at|date:"M d, Y" }})</small>
+              </span>
+              <div>
+                <a href="{% url 'restore-task' task.pk %}" class="btn btn-success btn-sm">Restore</a>
+                <a href="{% url 'delete-task' task.pk %}" class="btn btn-outline-danger btn-sm">Delete Permanently</a>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-center text-muted mb-0">No deleted tasks found</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

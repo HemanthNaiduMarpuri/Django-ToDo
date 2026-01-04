@@ -1,0 +1,45 @@
+{% extends "base.html" %} {% block title %}ToDo App{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h2 class="mb-4 text-center">My ToDo List</h2>
+    <div class="d-flex justify-content-center mt-5 mb-4">
+      <form action="{% url 'add-task' %}" method="get">
+        <button type="submit" class="btn btn-primary">Add</button>
+      </form>
+    </div>
+
+    <ul class="list-group">
+      {% for todo in todos %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          {% if todo.completed %}
+          <s class="text-muted">{{ todo.title }}</s>
+          {% else %} {{ todo.title }} {% endif %}
+        </div>
+        <div>
+          {% if todo.deadline %}
+          <small class="text-muted"> Deadline on {{ todo.deadline|date:"M d, Y" }}</small>
+          {% endif %}
+        </div>
+        <div class="d-flex align-items-center">
+          <a href="{% url 'important-task' todo.pk %}" class="btn btn-sm me-2">
+            <i class="fas fa-star {% if todo.important %}text-warning{% else %}text-secondary{% endif %}"></i>
+          </a>
+          {% if not todo.completed and not todo.trashed %}
+          <a href="{% url 'complete-task' todo.pk %}" class="btn btn-sm btn-success me-2">Complete</a>
+          {% endif %}
+          {% if not todo.trashed %}
+          <a href="{% url 'trash-task' todo.pk %}" class="btn btn-sm btn-danger">Trash</a>
+          {% else %}
+          <a href="" class="btn btn-sm btn-warning">Restore</a>
+          {% endif %}
+        </div>
+      </li>
+      {% empty %}
+      <p class="text-center text-muted">No tasks in this section.</p>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}
